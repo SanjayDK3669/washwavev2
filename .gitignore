@@ -1,0 +1,45 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# production build
+/build
+/dist
+
+# misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+Thumbs.db
+
+# cache
+.cache/
+.parcel-cache/
+
+# optional: next.js (ignore if not using)
+.next/
+
+# coverage
+coverage/
+
+# lock files (optional - keep if team project)
+# package-lock.json
+# yarn.lock
