@@ -435,7 +435,7 @@ export default function NewOrderPage() {
               {payMethod === 'qr_code' && (
                 <div className="qr-box" style={{ marginTop:12 }}>
                   <p style={{ fontSize:'0.82rem', fontWeight:600, color:'var(--ink-3)', marginBottom:10 }}>Scan to pay</p>
-                  <img src="http://localhost:8000/images/ww_ORcode.jpeg" alt="WashWave QR Code"
+                  <img src="https://washwavebackendv2.onrender.com/images/ww_ORcode.jpeg" alt="WashWave QR Code"
                     onError={e => { e.target.src=''; e.target.alt='QR code not found — place ww_ORcode.jpeg in backend/images/'; }}
                   />
                   <p style={{ fontSize:'0.76rem', color:'var(--ink-4)', marginTop:8 }}>
