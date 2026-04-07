@@ -7,81 +7,62 @@ import {
   Star, XCircle, ArrowRight, RefreshCw, Search
 } from 'lucide-react';
 
-
 const STATUS_META = {
-  payment_pending: { label: 'Payment Pending', badge: 'badge-pending',   icon: <Clock size={12} />,       step: 0 },
-  confirmed:       { label: 'Confirmed',        badge: 'badge-confirmed', icon: <CheckCircle size={12} />, step: 1 },
-  picked_up:       { label: 'Picked Up',        badge: 'badge-picked',    icon: <Package size={12} />,     step: 2 },
-  in_progress:     { label: 'In Progress',      badge: 'badge-progress',  icon: <RefreshCw size={12} />,   step: 3 },
-  ready:           { label: 'Ready',            badge: 'badge-ready',     icon: <Star size={12} />,        step: 4 },
-  delivered:       { label: 'Delivered',        badge: 'badge-delivered', icon: <CheckCircle size={12} />, step: 5 },
-  cancelled:       { label: 'Cancelled',        badge: 'badge-cancelled', icon: <XCircle size={12} />,     step: -1 },
+  payment_pending:  { label: 'Payment Pending',  badge: 'badge-pending',   icon: <Clock size={12} />,       step: 0 },
+  payment_review:   { label: 'Under Review',     badge: 'badge-review',    icon: <Clock size={12} />,       step: 0 },
+  confirmed:        { label: 'Confirmed',         badge: 'badge-confirmed', icon: <CheckCircle size={12} />, step: 1 },
+  picked_up:        { label: 'Picked Up',         badge: 'badge-picked',    icon: <Package size={12} />,     step: 2 },
+  in_progress:      { label: 'In Progress',       badge: 'badge-progress',  icon: <RefreshCw size={12} />,   step: 3 },
+  ready:            { label: 'Ready',             badge: 'badge-ready',     icon: <Star size={12} />,        step: 4 },
+  out_for_delivery: { label: 'Out for Delivery',  badge: 'badge-picked',    icon: <Truck size={12} />,       step: 4 },
+  delivered:        { label: 'Delivered',         badge: 'badge-delivered', icon: <CheckCircle size={12} />, step: 5 },
+  cancelled:        { label: 'Cancelled',         badge: 'badge-cancelled', icon: <XCircle size={12} />,     step: -1 },
 };
 
 const STEPS = ['Confirmed', 'Picked Up', 'Cleaning', 'Ready', 'Delivered'];
 
 function OrderCard({ order }) {
-  const meta      = STATUS_META[order.status] || STATUS_META.confirmed;
-  const stepIdx   = meta.step;
+  const meta  = STATUS_META[order.status] || STATUS_META.confirmed;
+  const stepIdx = meta.step;
   const isPending   = order.status === 'payment_pending';
   const isCancelled = order.status === 'cancelled';
-  const isSub       = order.order_type === 'subscription';
 
-  const formatDate = iso =>
-    new Date(iso).toLocaleDateString('en-IN', {
-      day: 'numeric', month: 'short', year: 'numeric',
-      hour: '2-digit', minute: '2-digit'
-    });
+  const formatDate = iso => {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  };
 
   return (
     <div className="card fade-up" style={{ overflow: 'hidden' }}>
+      {/* Header */}
       <div style={{ padding: '1rem 1.2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--line)' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span className="mono" style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--blue)' }}>
-              {order.order_number}
-            </span>
+            <span className="mono" style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--blue)' }}>{order.order_number}</span>
             <span className={`badge ${meta.badge}`}>{meta.icon} {meta.label}</span>
-            {isSub && (
-              <span style={{ background: 'var(--violet-light)', color: 'var(--violet)', fontSize: '0.68rem', fontWeight: 700, padding: '2px 8px', borderRadius: 'var(--radius)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                Plan
-              </span>
-            )}
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--ink-4)', marginTop: 3 }}>
-            {formatDate(order.created_at)}
-          </div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--ink-4)', marginTop: 3 }}>{formatDate(order.created_at)}</div>
         </div>
         <div style={{ textAlign: 'right' }}>
-          <div style={{ fontFamily: 'JetBrains Mono', fontWeight: 800, fontSize: '1.1rem' }}>
-            Rs {order.amount}
-          </div>
-          <div className={`badge ${order.payment_status === 'paid' ? 'badge-paid' : 'badge-unpaid'}`}
-            style={{ marginTop: 2 }}>
+          <div style={{ fontFamily: 'JetBrains Mono', fontWeight: 800, fontSize: '1.1rem' }}>Rs {order.amount}</div>
+          <div className={`badge ${order.payment_status === 'paid' ? 'badge-paid' : 'badge-unpaid'}`} style={{ marginTop: 2 }}>
             {order.payment_status === 'paid' ? 'Paid' : 'Unpaid'}
           </div>
         </div>
       </div>
 
+      {/* Body */}
       <div style={{ padding: '1rem 1.2rem' }}>
-        <div style={{ display: 'flex', gap: 16, marginBottom: 10, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 16, marginBottom: 12, flexWrap: 'wrap' }}>
           <div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--ink-4)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>
-              {isSub ? 'Plan' : 'Services'}
+            <div style={{ fontSize: '0.72rem', color: 'var(--ink-4)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>Services</div>
+            <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+              {order.services.map(s => (
+                <span key={s} style={{ fontSize: '0.78rem', background: 'var(--bg)', border: '1px solid var(--line)', borderRadius: 4, padding: '2px 8px', color: 'var(--ink-2)', textTransform: 'capitalize' }}>
+                  {s.replace('_', ' ')}
+                </span>
+              ))}
             </div>
-            {isSub ? (
-              <span style={{ fontSize: '0.88rem', fontWeight: 600 }}>
-                {order.subscription_plan === 'basic' ? 'Basic (10 clothes)' : 'Standard (20 clothes)'}
-              </span>
-            ) : (
-              <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                {order.services?.map(s => (
-                  <span key={s} style={{ fontSize: '0.78rem', background: 'var(--bg)', border: '1px solid var(--line)', borderRadius: 6, padding: '2px 8px', color: 'var(--ink-2)', textTransform: 'capitalize' }}>
-                    {s.replace('_', ' ')}
-                  </span>
-                ))}
-              </div>
-            )}
           </div>
           <div>
             <div style={{ fontSize: '0.72rem', color: 'var(--ink-4)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>Clothes</div>
@@ -89,26 +70,9 @@ function OrderCard({ order }) {
           </div>
         </div>
 
-        {/* Time slots */}
-        {(order.pickup_time || order.delivery_time) && (
-          <div style={{ display: 'flex', gap: 12, marginBottom: 10, padding: '8px 10px', background: 'var(--bg)', borderRadius: 'var(--radius)', border: '1px solid var(--line)' }}>
-            {order.pickup_time && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.78rem', color: 'var(--ink-3)' }}>
-                <Clock size={12} color="var(--blue)" />
-                <span style={{ fontWeight: 600 }}>Pickup:</span> {order.pickup_time}
-              </div>
-            )}
-            {order.delivery_time && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.78rem', color: 'var(--ink-3)' }}>
-                <Clock size={12} color="var(--green)" />
-                <span style={{ fontWeight: 600 }}>Delivery:</span> {order.delivery_time}
-              </div>
-            )}
-          </div>
-        )}
-
+        {/* Progress bar (skip if payment_pending or cancelled) */}
         {!isPending && !isCancelled && (
-          <div style={{ marginBottom: 10 }}>
+          <div style={{ marginBottom: 12 }}>
             <div className="progress-track">
               <div className="progress-fill" style={{ width: `${Math.max(5, (stepIdx / 5) * 100)}%` }} />
             </div>
@@ -128,6 +92,7 @@ function OrderCard({ order }) {
         )}
       </div>
 
+      {/* Footer */}
       <div className="card-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
         <Link to={`/track?order=${order.order_number}`} className="btn btn-outline btn-sm">
           Track Order <ArrowRight size={14} />
