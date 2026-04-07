@@ -177,7 +177,7 @@ function AuthLeft({ title, subtitle }) {
     <div className="auth-left">
       <div style={{ marginBottom:'3rem' }}>
         <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'2.5rem' }}>
-          <img src="/images/ww_logo.jpeg" alt="WashWave"
+          <img src="https://washwavebackendv2.onrender.com/images/ww_logo.jpeg" alt="WashWave"
             onError={e => e.target.style.display='none'}
             style={{ width:36, height:36, borderRadius:10, objectFit:'cover' }}/>
           <span style={{ fontWeight:800, fontSize:'1.1rem', letterSpacing:'-0.02em' }}>WashWave</span>

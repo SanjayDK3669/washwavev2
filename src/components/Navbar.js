@@ -17,7 +17,7 @@ export default function Navbar() {
     <nav className="navbar">
       <Link to="/" className="navbar-brand" onClick={close}>
         {/* Try logo image, fallback to dot */}
-        <img src="/images/ww_logo.jpeg" alt="WashWave"
+        <img src="https://washwavebackendv2.onrender.com/images/ww_logo.jpeg" alt="WashWave"
           onError={e => { e.target.style.display='none'; }}
           style={{ width:30, height:30, borderRadius:8, objectFit:'cover' }}
         />

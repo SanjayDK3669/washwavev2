@@ -196,7 +196,7 @@ export default function HomePage() {
       {/* Footer */}
       <div style={{ background:'var(--brand-dark)', color:'rgba(255,255,255,0.4)', padding:'1.5rem', textAlign:'center', fontSize:'0.78rem' }}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, marginBottom:6 }}>
-          <img src="/images/ww_logo.jpeg" alt="WashWave" onError={e=>e.target.style.display='none'}
+          <img src="https://washwavebackendv2.onrender.com/images/ww_logo.jpeg" alt="WashWave" onError={e=>e.target.style.display='none'}
             style={{ width:24, height:24, borderRadius:6, objectFit:'cover' }}/>
           <span style={{ color:'rgba(255,255,255,0.7)', fontWeight:800, fontSize:'0.9rem' }}>WashWave</span>
         </div>
