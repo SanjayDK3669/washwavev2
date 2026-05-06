@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'https://washwavebackendv2.onrender.com/api',
+  // baseURL: 'https://washwavebackendv2.onrender.com/api',
+  baseURL: 'http://0.0.0.0:8000/api'
 });
 
 API.interceptors.request.use(cfg => {
@@ -31,14 +32,24 @@ export const deleteAddress = (address, pincode) =>
   API.delete(`/auth/saved-address?address=${encodeURIComponent(address)}&pincode=${encodeURIComponent(pincode)}`);
 
 // Orders
-export const createOrder        = d => API.post('/orders/', d);
+export const createOrder        = d => API.post('/orders/', d);          // cash only
+export const createPaymentOrder = d => API.post('/orders/create-payment', d);   // razorpay: get rzp order id
+export const verifyAndSaveOrder = d => API.post('/orders/verify-payment', d);   // razorpay: verify + persist
 export const getMyOrders        = () => API.get('/orders/my-orders');
 export const trackOrder         = n => API.get(`/orders/track/${n}`);
 
 // Admin
-export const adminAllOrders     = ()  => API.get('/orders/admin/all');
-export const adminUpdateStatus  = d   => API.put('/orders/admin/status', d);
-export const adminVerifyPayment = d   => API.put('/orders/admin/verify-payment', d);
-export const adminStats         = ()  => API.get('/orders/admin/stats');
+// Admin
+export const adminAllOrders = () =>
+  API.get('/orders/admin/all');
+
+export const adminUpdateStatus = d =>
+  API.put('/orders/admin/status', d);
+
+export const adminVerifyPayment = d =>
+  API.put('/orders/admin/verify-payment', d);
+
+export const adminStats = () =>
+  API.get('/orders/admin/stats');
 
 export default API;
