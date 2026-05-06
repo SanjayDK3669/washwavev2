@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const API = axios.create({
-  // baseURL: 'https://washwavebackendv2.onrender.com/api',
-  baseURL: 'http://0.0.0.0:8000/api'
+  baseURL: 'https://washwavebackendv2.onrender.com/api',
+  //baseURL: 'http://0.0.0.0:8000/api'
 });
 
 API.interceptors.request.use(cfg => {
