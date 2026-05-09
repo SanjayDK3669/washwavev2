@@ -10,10 +10,38 @@ import {
 
 /* ─── Constants ──────────────────────────────────────────────────────────── */
 const SERVICES = [
-  { key: 'washing',      label: 'Washing',      price: 10, icon: '🧺', desc: 'Per clothing item' },
-  { key: 'dry_cleaning', label: 'Dry Cleaning',  price: 30, icon: '✨', desc: 'Per clothing item' },
-  { key: 'ironing',      label: 'Ironing',       price: 8,  icon: '👔', desc: 'Per clothing item' },
-  { key: 'full_laundry', label: 'Full Laundry',  price: 25, icon: '🔄', desc: 'Wash + iron per item' },
+  {
+    key:   'washing_iron',
+    label: 'Washing + Iron',
+    price: 45,
+    icon:  '🧺',
+    desc:  'Full wash, dry & iron — per clothing item',
+    color: '#EEF5FF',
+  },
+  {
+    key:   'ironing',
+    label: 'Only Ironing',
+    price: 30,
+    icon:  '👔',
+    desc:  'Crisp press for already-clean clothes — per item',
+    color: '#FFF7ED',
+  },
+  {
+    key:   'dry_wash_iron',
+    label: 'Dry Wash + Iron',
+    price: 90,
+    icon:  '✨',
+    desc:  'Solvent dry-cleaning + iron for delicates — per item',
+    color: '#F5F3FF',
+  },
+  {
+    key:   'bed_sheet',
+    label: 'Bed Sheet / Bed Spread',
+    price: 55,
+    icon:  '🛏️',
+    desc:  'Full wash, dry & fold — per piece',
+    color: '#ECFDF5',
+  },
 ];
 
 const SUBSCRIPTION_PLANS = [
@@ -281,12 +309,27 @@ export default function NewOrderPage() {
       {orderType === 'ondemand' ? (
         <div style={{ display:'flex', flexDirection:'column', gap:'0.7rem' }}>
           {SERVICES.map(svc => (
-            <div key={svc.key} className="card" style={{ padding:'0.85rem 1rem', display:'flex', alignItems:'center', justifyContent:'space-between', gap:10 }}>
-              <div style={{ display:'flex', alignItems:'center', gap:10, flex:1, minWidth:0 }}>
-                <span style={{ fontSize:'1.3rem' }}>{svc.icon}</span>
-                <div>
-                  <div style={{ fontWeight:700, fontSize:'0.88rem' }}>{svc.label}</div>
-                  <div style={{ fontSize:'0.72rem', color:'var(--ink-4)' }}>Rs {svc.price} · {svc.desc}</div>
+            <div key={svc.key} className="card" style={{
+              padding:'1rem 1.1rem',
+              display:'flex', alignItems:'center', justifyContent:'space-between', gap:10,
+              borderLeft: (counts[svc.key] || 0) > 0 ? '3px solid var(--blue)' : '1.5px solid var(--line)',
+              transition:'all 0.18s',
+            }}>
+              <div style={{ display:'flex', alignItems:'center', gap:12, flex:1, minWidth:0 }}>
+                <div style={{
+                  width:44, height:44, borderRadius:12,
+                  background: svc.color, display:'flex',
+                  alignItems:'center', justifyContent:'center',
+                  fontSize:'1.3rem', flexShrink:0,
+                }}>
+                  {svc.icon}
+                </div>
+                <div style={{ minWidth:0 }}>
+                  <div style={{ fontWeight:700, fontSize:'0.9rem', color:'var(--dark)' }}>{svc.label}</div>
+                  <div style={{ fontSize:'0.72rem', color:'var(--ink-4)', marginTop:1 }}>{svc.desc}</div>
+                  <div style={{ fontFamily:'var(--font-mono)', fontWeight:800, fontSize:'0.95rem', color:'var(--blue)', marginTop:3 }}>
+                    ₹{svc.price} <span style={{ fontFamily:'var(--font)', fontWeight:400, fontSize:'0.72rem', color:'var(--ink-4)' }}>/ item</span>
+                  </div>
                 </div>
               </div>
               <Counter value={counts[svc.key] || 0} onChange={v => setCounts(p => ({ ...p, [svc.key]: v }))}/>
@@ -311,7 +354,7 @@ export default function NewOrderPage() {
                 Up to <strong>{plan.clothes} clothes</strong> per pickup
               </div>
               <div className="mono" style={{ fontWeight:800, fontSize:'1.1rem', color:'var(--blue)' }}>
-                Rs {plan.price}
+                ₹{plan.price}
                 <span style={{ fontSize:'0.72rem', fontWeight:400, color:'var(--ink-4)' }}> / pickup</span>
               </div>
             </div>
@@ -323,7 +366,7 @@ export default function NewOrderPage() {
       {amount > 0 && (
         <div style={{ marginTop:'1.2rem', padding:'0.85rem 1rem', background:'var(--blue-light)', borderRadius:'var(--radius)', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
           <span style={{ color:'var(--blue)', fontWeight:600, fontSize:'0.88rem' }}>Estimated Total</span>
-          <span className="mono" style={{ fontWeight:800, fontSize:'1.05rem', color:'var(--blue)' }}>Rs {amount}</span>
+          <span className="mono" style={{ fontWeight:800, fontSize:'1.05rem', color:'var(--blue)' }}>₹{amount}</span>
         </div>
       )}
 
@@ -422,7 +465,7 @@ export default function NewOrderPage() {
             <span style={{ fontSize:'0.84rem', color:'var(--ink-2)' }}>
               {SUBSCRIPTION_PLANS.find(p=>p.key===subPlan)?.label} Plan
             </span>
-            <span className="mono" style={{ fontWeight:700 }}>Rs {amount}</span>
+            <span className="mono" style={{ fontWeight:700 }}>₹{amount}</span>
           </div>
         ) : (
           serviceItems.map(si => {
@@ -430,14 +473,14 @@ export default function NewOrderPage() {
             return (
               <div key={si.service} style={{ display:'flex', justifyContent:'space-between', marginBottom:3 }}>
                 <span style={{ fontSize:'0.82rem', color:'var(--ink-2)' }}>{svc?.label} × {si.count}</span>
-                <span className="mono" style={{ fontSize:'0.82rem' }}>Rs {svc.price * si.count}</span>
+                <span className="mono" style={{ fontSize:'0.82rem' }}>₹{svc.price * si.count}</span>
               </div>
             );
           })
         )}
         <div style={{ borderTop:'1px solid var(--blue)', marginTop:8, paddingTop:8, display:'flex', justifyContent:'space-between' }}>
           <span style={{ fontWeight:700, color:'var(--blue)' }}>Total</span>
-          <span className="mono" style={{ fontWeight:800, fontSize:'1.05rem', color:'var(--blue)' }}>Rs {amount}</span>
+          <span className="mono" style={{ fontWeight:800, fontSize:'1.05rem', color:'var(--blue)' }}>₹{amount}</span>
         </div>
         <div style={{ marginTop:8, fontSize:'0.75rem', color:'var(--ink-3)', display:'flex', flexDirection:'column', gap:3 }}>
           <div style={{ display:'flex', alignItems:'center', gap:5 }}>
@@ -500,7 +543,7 @@ export default function NewOrderPage() {
             <><Banknote size={16}/> Place Order</>
           ) : (
             <><span style={{ fontSize:'1rem' }}>{PAYMENT_METHODS.find(p=>p.key===payMethod)?.icon}</span>
-              Pay Rs {amount} <ArrowRight size={15}/></>
+              Pay ₹{amount} <ArrowRight size={15}/></>
           )}
         </button>
       </div>
