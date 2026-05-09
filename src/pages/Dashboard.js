@@ -13,6 +13,9 @@ const SERVICE_LABELS = {
   ironing:       'Only Ironing',
   dry_wash_iron: 'Dry Wash + Iron',
   bed_sheet:     'Bed Sheet',
+};
+
+const STATUS_META = {
   payment_pending:  { label: 'Payment Pending',   badge: 'badge-pending',   icon: <Clock size={11}/>,       step: 0 },
   confirmed:        { label: 'Confirmed',          badge: 'badge-confirmed', icon: <CheckCircle size={11}/>, step: 1 },
   picked_up:        { label: 'Picked Up',          badge: 'badge-picked',    icon: <Package size={11}/>,     step: 2 },
